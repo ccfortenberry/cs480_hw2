@@ -65,6 +65,7 @@ protected:
 	QuitCommand quitCommand;
 	MovementCommand xaxisCommand;
 	MovementCommand yaxisCommand;
+	MovementCommand slideCommand;
 
 	PlaySoundCommand play0{ 0, false };
 	PlaySoundCommand play1{ 1, false };

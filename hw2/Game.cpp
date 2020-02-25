@@ -24,6 +24,7 @@ void Game::init() {
 	input.start = nullptr;
 	input.axis1X = &xaxisCommand;
 	input.axis1Y = &yaxisCommand;
+	input.buttonA = &slideCommand;
 }
 
 void Game::load() {

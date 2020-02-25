@@ -13,6 +13,13 @@ namespace GameLib {
 		if (axis2)
 		//	actor.physicsInfo.a.y = axis2->getAmount();
 		    actor.velocity.y = axis2->getAmount() * actor.speed;
+		auto slide = Locator::getInput()->buttonA;
+		if (slide) {
+			if (axis1)
+				actor.velocity.x = axis1->getAmount() * actor.speed * 1.5;
+			if (axis2)
+				actor.velocity.x = axis1->getAmount() * actor.speed * 1.5;
+		}
 	}
 
 	void RandomInputComponent::update(Actor& actor) {
