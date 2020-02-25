@@ -3,6 +3,7 @@
 
 #include "Commands.hpp"
 #include <gamelib.hpp>
+#include <gamelib_story_screen.hpp>
 
 #ifdef _MSC_VER
 #pragma comment(lib, "gamelib.lib")

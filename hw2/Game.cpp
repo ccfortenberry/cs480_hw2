@@ -1,5 +1,7 @@
 #include "Game.hpp"
 
+const int BLIP = -1;
+
 void Game::init() {
 	GameLib::Locator::provide(&context);
 	if (context.audioInitialized())
@@ -11,7 +13,7 @@ void Game::init() {
 
 	box2d.init();
 
-	audio.setVolume(0.2f);
+	audio.setVolume(0.1f);
 
 	input.back = &quitCommand;
 	input.key1 = &play0;
@@ -46,7 +48,7 @@ void Game::load() {
 	context.loadAudioClip(3, "starbattle-exo.wav");
 	context.loadAudioClip(4, "starbattle-ok.wav");
 	context.loadAudioClip(5, "starbattle-pdead.wav");
-	//context.loadAudioClip(SOUND_BLIP, "blip.wav");
+	context.loadAudioClip(BLIP, "blip.wav");
 	context.loadMusicClip(0, "starbattlemusic1.mp3");
 	context.loadMusicClip(1, "starbattlemusic2.mp3");
 	context.loadMusicClip(2, "distoro2.mid");
@@ -122,7 +124,47 @@ void Game::kill() {
 }
 
 void Game::showIntro() {
+	GameLib::StoryScreen ss;
+	ss.setBlipSound(BLIP);
 
+	if (!ss.load("dialog.txt")) {
+		ss.setFont(0, "URWClassico-Bold.ttf", 2.0f);
+		ss.setFontStyle(0, 1, ss.HALIGN_CENTER, ss.VALIGN_TOP);
+
+		ss.newFrame(5000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "Greetings, Agent...");
+
+		ss.newFrame(3000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "...");
+
+		ss.newFrame(10000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "It has been some time. " "The Secret Agency is still cautious about utilizing you " "Especially after the last mess you left for us...");
+
+		ss.newFrame(3000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "...");
+
+		ss.newFrame(10000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "Oh ignore me, I'm starting to sound like my bosses. " "You know the drill, yeah? " "In and out, quick and simple.");
+
+		ss.newFrame(3000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "...");
+
+		ss.newFrame(7500, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "Let's try and not make it too simple this time");
+
+		ss.newFrame(2000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "Initializing Mission...");
+		ss.frameLine(0, "Good luck");
+	}
+
+	ss.play();
 }
 
 void Game::initLevel(const int& levelID) {
