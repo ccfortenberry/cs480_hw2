@@ -9,6 +9,7 @@
 #endif
 
 #include "PlayerActorComponent.hpp"
+#include "DoorActorComponent.hpp"
 
 class Game {
 public: 
@@ -44,7 +45,7 @@ protected:
 	GameLib::Box2D box2d;
 	GameLib::Font gothicfont{ &context };
 	GameLib::Font minchofont{ &context };
-	SDL_Color backColor{ GameLib::Azure };
+	SDL_Color backColor{ GameLib::Black };
 
 	std::vector<std::string> searchPaths{ "./assets", "../assets" };
 	std::string worldPath{ "world.txt" };

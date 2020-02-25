@@ -1,11 +1,19 @@
-#include "PlayerActorComponent.hpp"
+#include "DoorActorComponent.hpp"
 
 namespace GameLib {
 	extern void debugDraw(Actor& a);
 	extern void debugDrawSweptAABB(Actor& a);
 	extern float SweptAABB(Actor& a, Actor& b, glm::vec3& normal);
-	
-	void PlayerActorComponent::update(Actor& a, World& w) {
+
+	DoorActorComponent::DoorActorComponent(ActorPtr& a) {
+		linkDoor(a);
+	}
+
+	void DoorActorComponent::linkDoor(ActorPtr& a) {
+		door = a;
+	}
+
+	void DoorActorComponent::update(Actor& a, World& w) {
 		if (a.isStatic()) {
 			staticInfo.t += a.dt;
 			//float movement = std::sin(staticInfo.t) * staticInfo.movement;
@@ -29,15 +37,19 @@ namespace GameLib {
 		}
 	}
 
-	void PlayerActorComponent::beginPlay(Actor& a) {
+	void DoorActorComponent::beginPlay(Actor& a) {
 		if (a.isStatic()) {
 			staticInfo.horizontal = (random.rd() & 1) == 1;
 			staticInfo.movement = random.positive() * 5.0f + 2.0f;
 			staticInfo.position = a.position;
 		}
+
+		if (a.isTrigger()) {
+			triggerInfo.position = a.position;
+		}
 	}
 
-	void PlayerActorComponent::handleCollisionStatic(Actor& a, Actor& b) {
+	void DoorActorComponent::handleCollisionStatic(Actor& a, Actor& b) {
 		glm::vec3 curPosition = a.position;
 		glm::vec3 curVelocity = a.velocity;
 		a.velocity = a.position - a.lastPosition;
@@ -74,7 +86,7 @@ namespace GameLib {
 		}
 	}
 
-	void PlayerActorComponent::handleCollisionDynamic(Actor& a, Actor& b) {
+	void DoorActorComponent::handleCollisionDynamic(Actor& a, Actor& b) {
 		// backup a's position
 		glm::vec3 curPosition = a.position;
 		glm::vec3 curVelocity = a.velocity;
@@ -106,7 +118,7 @@ namespace GameLib {
 		a.position += a.velocity;
 	}
 
-	void PlayerActorComponent::handleCollisionWorld(Actor& a, World& w) {
+	void DoorActorComponent::handleCollisionWorld(Actor& a, World& w) {
 		// determine whether to move the player up, or to the left
 		int ix1 = (int)(a.position.x);
 		int iy1 = (int)(a.position.y);
@@ -278,19 +290,21 @@ namespace GameLib {
 		}
 	}
 
-	void PlayerActorComponent::beginOverlap(Actor& a, Actor& b) {
+	void DoorActorComponent::beginOverlap(Actor& a, Actor& b) {
 		HFLOGDEBUG("Actor '%d' is now overlapping trigger actor '%d'", a.getId(), b.getId());
 	}
 
-	void PlayerActorComponent::endOverlap(Actor& a, Actor& b) {
+	void DoorActorComponent::endOverlap(Actor& a, Actor& b) {
 		HFLOGDEBUG("Actor '%d' is not overlapping trigger actor '%d'", a.getId(), b.getId());
 	}
 
-	void PlayerActorComponent::beginTriggerOverlap(Actor& a, Actor& b) {
+	void DoorActorComponent::beginTriggerOverlap(Actor& a, Actor& b) {
 		HFLOGDEBUG("Trigger actor '%d' is now overlapped by actor '%d'", a.getId(), b.getId());
+		a.active = false;
+		door->active = false;
 	}
 
-	void PlayerActorComponent::endTriggerOverlap(Actor& a, Actor& b) {
+	void DoorActorComponent::endTriggerOverlap(Actor& a, Actor& b) {
 		HFLOGDEBUG("Trigger actor '%d' is not overlapped by actor '%d'", a.getId(), b.getId());
 	}
 }

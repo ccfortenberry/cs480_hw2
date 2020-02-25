@@ -36,5 +36,8 @@ namespace GameLib {
 		}
 	}
 
-	void InputComponentForStatic::update(Actor& actor) {}
+	void InputComponentForStatic::update(Actor& actor) {
+		actor.velocity.x = 0;
+		actor.velocity.y = 0;
+	}
 } // namespace GameLib

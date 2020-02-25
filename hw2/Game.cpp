@@ -119,6 +119,7 @@ void Game::initLevel(const int& levelID) {
 	// Actor Components
 	auto NewActor = []() { return std::make_shared<GameLib::ActorComponent>(); };
 	auto NewPlayerActor = []() { return std::make_shared<GameLib::PlayerActorComponent>(); };
+	auto NewDoorActor = [](GameLib::ActorPtr& a) { return std::make_shared<GameLib::DoorActorComponent>(a); };
 	// Other actor components?
 
 	// Physics Components
@@ -137,6 +138,14 @@ void Game::initLevel(const int& levelID) {
 	auto ply = _makeActor(cx, cy, speed, 1, NewSimpleInput(), NewPlayerActor(), NewPhysics(), NewGraphics());
 	world.addDynamicActor(ply);
 	ply->rename("Player");
+
+	auto door = _makeActor(27, 18, 0, 853, NewInputForStatic(), NewPlayerActor(), NewPhysics(), NewGraphics());
+	world.addStaticActor(door);
+	door->rename("Test_Door");
+	
+	auto trigger = _makeActor(19, 9, 0, 40 * 15 - 8, NewInputForStatic(), NewDoorActor(door), NewPhysics(), NewGraphics());
+	world.addTriggerActor(trigger);
+	trigger->rename("Test_Trigger");
 }
 
 void Game::showGoodEnd() {
