@@ -16,13 +16,6 @@ void Game::init() {
 	audio.setVolume(0.1f);
 
 	input.back = &quitCommand;
-	input.key1 = &play0;
-	input.key2 = &play1;
-	input.key3 = &play2;
-	input.key4 = &play3;
-	input.key5 = &playMusic1;
-	input.key6 = &playMusic2;
-	input.key7 = &playMusic3;
 	input.start = nullptr;
 	input.axis1X = &xaxisCommand;
 	input.axis1Y = &yaxisCommand;
@@ -42,18 +35,9 @@ void Game::load() {
 	}
 	context.loadTileset(GameLib::LIBXOR_TILESET32, 32, 32, "LibXORColors32x32.png");
 
-	context.loadAudioClip(0, "starbattle-bad.wav");
-	context.loadAudioClip(1, "starbattle-dead.wav");
-	context.loadAudioClip(2, "starbattle-endo.wav");
-	context.loadAudioClip(3, "starbattle-exo.wav");
-	context.loadAudioClip(4, "starbattle-ok.wav");
-	context.loadAudioClip(5, "starbattle-pdead.wav");
 	context.loadAudioClip(BLIP, "blip.wav");
-	context.loadMusicClip(0, "starbattlemusic1.mp3");
-	context.loadMusicClip(1, "starbattlemusic2.mp3");
-	context.loadMusicClip(2, "distoro2.mid");
+	context.loadMusicClip(0, "fooling-the-night.wav");
 
-	gothicfont.load("fonts-japanese-gothic.ttf", 36);
 	minchofont.load("fonts-japanese-mincho.ttf", 36);
 
 	worldPath = context.findSearchPath(worldPath);
@@ -71,6 +55,8 @@ unsigned int Game::getGameState() {
 	graphics.setCenter(graphics.origin());
 
 	gameState = 0;
+
+	audio.playMusic(0, -1, 0);
 
 	while (!context.quitRequested && gameState==0 && world.dynamicActors[0]->active) {
 		updateTiming();
@@ -130,7 +116,7 @@ void Game::showIntro() {
 	ss.setBlipSound(BLIP);
 
 	if (!ss.load("dialog.txt")) {
-		ss.setFont(0, "URWClassico-Bold.ttf", 2.0f);
+		ss.setFont(0, "LiberationSans-Bold.ttf", 2.0f);
 		ss.setFontStyle(0, 1, ss.HALIGN_CENTER, ss.VALIGN_TOP);
 
 		ss.newFrame(5000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
@@ -288,7 +274,7 @@ void Game::showGoodEnd() {
 	ss.setBlipSound(BLIP);
 
 	if (!ss.load("dialog.txt")) {
-		ss.setFont(0, "URWClassico-Bold.ttf", 2.0f);
+		ss.setFont(0, "LiberationSans-Bold.ttf", 2.0f);
 		ss.setFontStyle(0, 1, ss.HALIGN_CENTER, ss.VALIGN_TOP);
 
 		ss.newFrame(5000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
@@ -312,7 +298,7 @@ void Game::showBadEnd() {
 	ss.setBlipSound(BLIP);
 
 	if (!ss.load("dialog.txt")) {
-		ss.setFont(0, "URWClassico-Bold.ttf", 2.0f);
+		ss.setFont(0, "LiberationSans-Bold.ttf", 2.0f);
 		ss.setFontStyle(0, 1, ss.HALIGN_CENTER, ss.VALIGN_TOP);
 
 		ss.newFrame(3000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);

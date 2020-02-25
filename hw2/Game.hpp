@@ -69,13 +69,7 @@ protected:
 	MovementCommand yaxisCommand;
 	MovementCommand slideCommand;
 
-	PlaySoundCommand play0{ 0, false };
-	PlaySoundCommand play1{ 1, false };
-	PlaySoundCommand play2{ 2, false };
-	PlaySoundCommand play3{ 3, false };
 	PlayMusicCommand playMusic1{ 0 };
-	PlayMusicCommand playMusic2{ 1 };
-	PlayMusicCommand playMusic3{ 2 };
 
 	virtual void _debugKeys();
 
