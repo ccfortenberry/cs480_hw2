@@ -300,10 +300,8 @@ namespace GameLib {
 
 	void DoorActorComponent::beginTriggerOverlap(Actor& a, Actor& b) {
 		HFLOGDEBUG("Trigger actor '%d' is now overlapped by actor '%d'", a.getId(), b.getId());
-		if (a.getId() == 0) {
-			a.active = false;
-			door->active = false;
-		}
+		a.active = false;
+		door->active = false;
 	}
 
 	void DoorActorComponent::endTriggerOverlap(Actor& a, Actor& b) {

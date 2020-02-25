@@ -93,10 +93,12 @@ unsigned int Game::getGameState() {
 
 		context.swapBuffers();
 		frames++;
+		gameTimer -= dt;
 
 		if (context.quitRequested) gameState = -1;
 		if (!world.staticActors[8]->active) gameState = 1;
 		if (!world.dynamicActors[0]->active) gameState = 2;
+		if (gameTimer <= 0) gameState = 2;
 
 		// Oh hey it's some familiar bad design i'm doing
 		// instead of proper good design
@@ -282,11 +284,59 @@ void Game::initLevel(const int& levelID) {
 }
 
 void Game::showGoodEnd() {
+	GameLib::StoryScreen ss;
+	ss.setBlipSound(BLIP);
 
+	if (!ss.load("dialog.txt")) {
+		ss.setFont(0, "URWClassico-Bold.ttf", 2.0f);
+		ss.setFontStyle(0, 1, ss.HALIGN_CENTER, ss.VALIGN_TOP);
+
+		ss.newFrame(5000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "I can't believe you actually pulled it off...");
+
+		ss.newFrame(5000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "And with time to spare no less");
+
+		ss.newFrame(5000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "Excellent work\n- I");
+	}
+
+	ss.play();
 }
 
 void Game::showBadEnd() {
+	GameLib::StoryScreen ss;
+	ss.setBlipSound(BLIP);
 
+	if (!ss.load("dialog.txt")) {
+		ss.setFont(0, "URWClassico-Bold.ttf", 2.0f);
+		ss.setFontStyle(0, 1, ss.HALIGN_CENTER, ss.VALIGN_TOP);
+
+		ss.newFrame(3000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "...");
+
+		ss.newFrame(5000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "Are you there agent?");
+
+		ss.newFrame(3000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "...");
+
+		ss.newFrame(5000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "What a waste...");
+
+		ss.newFrame(2000, GameLib::WHITE, GameLib::BLACK, GameLib::WHITE, GameLib::BLACK, GameLib::BLACK);
+		ss.frameHeader(0, "");
+		ss.frameLine(0, "Terminating feed-");
+	}
+
+	ss.play();
 }
 
 void Game::updateCamera() {
@@ -308,13 +358,17 @@ void Game::drawWorld() {
 }
 
 void Game::drawHUD() {
+	char timestr[64] = { 0 };
+	snprintf(timestr, 64, "Time: %3.2f", gameTimer);
+	minchofont.draw((int)graphics.getWidth(), 0, timestr, GameLib::White, GameLib::Font::HALIGN_RIGHT | GameLib::Font::VALIGN_TOP | GameLib::Font::SHADOWED);
+	
 	char fpsstr[64] = { 0 };
-	snprintf(fpsstr, 64, "%3.2f", 1.0f / dt);
+	snprintf(fpsstr, 64, "FPS: %3.2f", 1.0f / dt);
 	minchofont.draw(
 		(int)graphics.getWidth(),
 		(int)graphics.getHeight() - 2,
 		fpsstr,
-		GameLib::Gold,
+		GameLib::White,
 		GameLib::Font::HALIGN_RIGHT | GameLib::Font::VALIGN_BOTTOM | GameLib::Font::SHADOWED);
 }
 

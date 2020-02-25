@@ -18,8 +18,12 @@ namespace GameLib {
 			if (axis1)
 				actor.velocity.x = axis1->getAmount() * actor.speed * 1.5;
 			if (axis2)
-				actor.velocity.x = axis1->getAmount() * actor.speed * 1.5;
+				actor.velocity.y = axis2->getAmount() * actor.speed * 1.5;
 		}
+		if (actor.velocity.x > 0)
+			actor.sprite.flipX = true;
+		else if (actor.velocity.x < 0)
+			actor.sprite.flipX = false;
 	}
 
 	void RandomInputComponent::update(Actor& actor) {
@@ -52,5 +56,9 @@ namespace GameLib {
 	{
 		// Guess where this is and shouldn't be...
 		// *coughmaincough*
+		if (actor.velocity.x > 0)
+			actor.sprite.flipX = true;
+		else if (actor.velocity.x < 0)
+			actor.sprite.flipX = false;
 	}
 } // namespace GameLib

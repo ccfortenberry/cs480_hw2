@@ -18,6 +18,7 @@ public:
 	Game() {}
 
 	int gameState{ 0 };
+	float gameTimer{ 100 };
 
 	void init();
 	void load();
