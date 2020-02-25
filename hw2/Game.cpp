@@ -135,17 +135,77 @@ void Game::initLevel(const int& levelID) {
 	float speed = (float)graphics.getTileSizeX();
 
 	// Init actors
-	auto ply = _makeActor(cx, cy, speed, 1, NewSimpleInput(), NewPlayerActor(), NewPhysics(), NewGraphics());
+	auto ply = _makeActor(6, 4, speed, 1, NewSimpleInput(), NewPlayerActor(), NewPhysics(), NewGraphics());
 	world.addDynamicActor(ply);
 	ply->rename("Player");
 
-	auto door = _makeActor(27, 18, 0, 853, NewInputForStatic(), NewPlayerActor(), NewPhysics(), NewGraphics());
-	world.addStaticActor(door);
-	door->rename("Test_Door");
+	auto door_1 = _makeActor(42, 16, 0, 853, NewInputForStatic(), NewPlayerActor(), NewPhysics(), NewGraphics());
+	world.addStaticActor(door_1);
+	door_1->rename("Door_1");
+
+	auto door_2 = _makeActor(163, 10, 0, 853, NewInputForStatic(), NewPlayerActor(), NewPhysics(), NewGraphics());
+	world.addStaticActor(door_2);
+	door_2->rename("door_2");
+
+	auto door_guard = _makeActor(163, 16, 0, 853, NewInputForStatic(), NewPlayerActor(), NewPhysics(), NewGraphics());
+	world.addStaticActor(door_guard);
+	door_guard->rename("Door_Guard");
+
+	auto door_vault_1 = _makeActor(208, 10, 0, 853, NewInputForStatic(), NewPlayerActor(), NewPhysics(), NewGraphics());
+	world.addStaticActor(door_vault_1);
+	door_vault_1->rename("door_vault_1");
+
+	auto door_vault_2 = _makeActor(209, 10, 0, 853, NewInputForStatic(), NewPlayerActor(), NewPhysics(), NewGraphics());
+	world.addStaticActor(door_vault_2);
+	door_vault_2->rename("door_vault_2");
+
+	auto door_vault_3 = _makeActor(210, 10, 0, 853, NewInputForStatic(), NewPlayerActor(), NewPhysics(), NewGraphics());
+	world.addStaticActor(door_vault_3);
+	door_vault_3->rename("door_vault_3");
+
+	auto door_vault_4 = _makeActor(211, 10, 0, 853, NewInputForStatic(), NewPlayerActor(), NewPhysics(), NewGraphics());
+	world.addStaticActor(door_vault_4);
+	door_vault_4->rename("door_vault_4");
+
+	auto door_vault_5 = _makeActor(212, 10, 0, 853, NewInputForStatic(), NewPlayerActor(), NewPhysics(), NewGraphics());
+	world.addStaticActor(door_vault_5);
+	door_vault_5->rename("door_vault_5");
 	
-	auto trigger = _makeActor(19, 9, 0, 40 * 15 - 8, NewInputForStatic(), NewDoorActor(door), NewPhysics(), NewGraphics());
-	world.addTriggerActor(trigger);
-	trigger->rename("Test_Trigger");
+	auto key_1 = _makeActor(29, 9, 0, 40 * 15 - 8, NewInputForStatic(), NewDoorActor(door_1), NewPhysics(), NewGraphics());
+	world.addTriggerActor(key_1);
+	key_1->rename("key_1");
+
+	auto key_2 = _makeActor(128, 18, 0, 40 * 15 - 8, NewInputForStatic(), NewDoorActor(door_2), NewPhysics(), NewGraphics());
+	world.addTriggerActor(key_2);
+	key_2->rename("key_2");
+
+	auto key_vault_1 = _makeActor(4, 1, 0, 40 * 15 - 8, NewInputForStatic(), NewDoorActor(door_vault_1), NewPhysics(), NewGraphics());
+	world.addTriggerActor(key_vault_1);
+	key_vault_1->rename("key_vault_1");
+
+	auto key_vault_2 = _makeActor(78, 20, 0, 40 * 15 - 8, NewInputForStatic(), NewDoorActor(door_vault_2), NewPhysics(), NewGraphics());
+	world.addTriggerActor(key_vault_2);
+	key_vault_2->rename("key_vault_2");
+
+	auto key_vault_3 = _makeActor(126, 2, 0, 40 * 15 - 8, NewInputForStatic(), NewDoorActor(door_vault_3), NewPhysics(), NewGraphics());
+	world.addTriggerActor(key_vault_3);
+	key_vault_3->rename("key_vault_3");
+
+	auto key_vault_4 = _makeActor(162, 16, 0, 40 * 15 - 8, NewInputForStatic(), NewDoorActor(door_vault_4), NewPhysics(), NewGraphics());
+	world.addTriggerActor(key_vault_4);
+	key_vault_4->rename("key_vault_4");
+
+	auto key_vault_5 = _makeActor(206, 15, 0, 40 * 15 - 8, NewInputForStatic(), NewDoorActor(door_vault_5), NewPhysics(), NewGraphics());
+	world.addTriggerActor(key_vault_5);
+	key_vault_5->rename("key_vault_5");
+
+	auto data_vault = _makeActor(254, 10, 0, 40 * 27 + 1, NewInputForStatic(), NewPlayerActor(), NewPhysics(), NewGraphics());
+	world.addStaticActor(data_vault);
+	data_vault->rename("data_vault");
+
+	/*auto data_vault_trigger = _makeActor(252, 10, 0, 40 * 25 + 37, NewInputForStatic(), NewPlayerActor(), NewPhysics(), NewGraphics());
+	world.addTriggerActor(data_vault_trigger);
+	data_vault_trigger->rename("data_vault_trigger");*/
 }
 
 void Game::showGoodEnd() {
