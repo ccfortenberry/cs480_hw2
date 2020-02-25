@@ -1,12 +1,12 @@
-#include "PlayerActorComponent.hpp"
+#include "HostileActorComponent.hpp"
 #include "Game.hpp"
 
 namespace GameLib {
 	extern void debugDraw(Actor& a);
 	extern void debugDrawSweptAABB(Actor& a);
 	extern float SweptAABB(Actor& a, Actor& b, glm::vec3& normal);
-	
-	void PlayerActorComponent::update(Actor& a, World& w) {
+
+	void HostileActorComponent::update(Actor& a, World& w) {
 		if (a.isStatic()) {
 			staticInfo.t += a.dt;
 			//float movement = std::sin(staticInfo.t) * staticInfo.movement;
@@ -30,7 +30,7 @@ namespace GameLib {
 		}
 	}
 
-	void PlayerActorComponent::beginPlay(Actor& a) {
+	void HostileActorComponent::beginPlay(Actor& a) {
 		if (a.isStatic()) {
 			staticInfo.horizontal = (random.rd() & 1) == 1;
 			staticInfo.movement = random.positive() * 5.0f + 2.0f;
@@ -38,47 +38,47 @@ namespace GameLib {
 		}
 	}
 
-	void PlayerActorComponent::handleCollisionStatic(Actor& a, Actor& b) {
-		glm::vec3 curPosition = a.position;
-		glm::vec3 curVelocity = a.velocity;
-		a.velocity = a.position - a.lastPosition;
-		a.position = a.lastPosition;
-		// NEW SDF style
+	void HostileActorComponent::handleCollisionStatic(Actor& a, Actor& b) {
+		//glm::vec3 curPosition = a.position;
+		//glm::vec3 curVelocity = a.velocity;
+		//a.velocity = a.position - a.lastPosition;
+		//a.position = a.lastPosition;
+		//// NEW SDF style
 
-		float btop = b.position.y;
-		float bbot = b.position.y + b.size.y;
+		//float btop = b.position.y;
+		//float bbot = b.position.y + b.size.y;
 
-		glm::vec2 P = { a.position.x, a.position.y };
-		glm::vec2 Pmax = a.position2d() + a.size2d();
-		glm::vec2 asize = a.size2d();
-		glm::vec2 v = { a.velocity.x, a.velocity.y };
-		float vlen = glm::length(v);
-		// avoid NAN by ensuring vector has length
-		glm::vec2 vdir = (vlen != 0.0f) ? glm::normalize(v) : glm::vec2{ 0.0f, 0.0f };
-		glm::vec2 supportB = b.support(a.center2d());
-		glm::vec2 supportA = a.support(b.center2d());
-		float t = 0.0f;
-		float dt = 0.001f;
-		float touching = a.touching(b);
-		if (touching < 0) {
-			glm::vec2 N = b.normal(supportB);
-			glm::vec2 T = b.tangent(supportB);
-			float d = glm::length(supportA - supportB);
-			vdir = glm::normalize(supportA - supportB);
-			glm::vec2 Pnew = P + vdir * touching;
-			a.position.x = Pnew.x;
-			a.position.y = Pnew.y;
-		}
-		else {
-			a.velocity = curVelocity;
-			a.position = curPosition;
-		}
-
-		b.active = false;
+		//glm::vec2 P = { a.position.x, a.position.y };
+		//glm::vec2 Pmax = a.position2d() + a.size2d();
+		//glm::vec2 asize = a.size2d();
+		//glm::vec2 v = { a.velocity.x, a.velocity.y };
+		//float vlen = glm::length(v);
+		//// avoid NAN by ensuring vector has length
+		//glm::vec2 vdir = (vlen != 0.0f) ? glm::normalize(v) : glm::vec2{ 0.0f, 0.0f };
+		//glm::vec2 supportB = b.support(a.center2d());
+		//glm::vec2 supportA = a.support(b.center2d());
+		//float t = 0.0f;
+		//float dt = 0.001f;
+		//float touching = a.touching(b);
+		//if (touching < 0) {
+		//	glm::vec2 N = b.normal(supportB);
+		//	glm::vec2 T = b.tangent(supportB);
+		//	float d = glm::length(supportA - supportB);
+		//	vdir = glm::normalize(supportA - supportB);
+		//	glm::vec2 Pnew = P + vdir * touching;
+		//	a.position.x = Pnew.x;
+		//	a.position.y = Pnew.y;
+		//}
+		//else {
+		//	a.velocity = curVelocity;
+		//	a.position = curPosition;
+		//}
 	}
 
-	void PlayerActorComponent::handleCollisionDynamic(Actor& a, Actor& b) {
+	void HostileActorComponent::handleCollisionDynamic(Actor& a, Actor& b) {
 		// backup a's position
+		if (alerted) b.active = false;
+		else a.active = false;
 		glm::vec3 curPosition = a.position;
 		glm::vec3 curVelocity = a.velocity;
 		a.velocity = a.position - a.lastPosition;
@@ -109,7 +109,7 @@ namespace GameLib {
 		a.position += a.velocity;
 	}
 
-	void PlayerActorComponent::handleCollisionWorld(Actor& a, World& w) {
+	void HostileActorComponent::handleCollisionWorld(Actor& a, World& w) {
 		// determine whether to move the player up, or to the left
 		int ix1 = (int)(a.position.x);
 		int iy1 = (int)(a.position.y);
@@ -281,19 +281,21 @@ namespace GameLib {
 		}
 	}
 
-	void PlayerActorComponent::beginOverlap(Actor& a, Actor& b) {
+	void HostileActorComponent::beginOverlap(Actor& a, Actor& b) {
 		HFLOGDEBUG("Actor '%d' is now overlapping trigger actor '%d'", a.getId(), b.getId());
+		if (alerted) b.active = false;
+		else a.active = false;
 	}
 
-	void PlayerActorComponent::endOverlap(Actor& a, Actor& b) {
+	void HostileActorComponent::endOverlap(Actor& a, Actor& b) {
 		HFLOGDEBUG("Actor '%d' is not overlapping trigger actor '%d'", a.getId(), b.getId());
 	}
 
-	void PlayerActorComponent::beginTriggerOverlap(Actor& a, Actor& b) {
+	void HostileActorComponent::beginTriggerOverlap(Actor& a, Actor& b) {
 		HFLOGDEBUG("Trigger actor '%d' is now overlapped by actor '%d'", a.getId(), b.getId());
 	}
 
-	void PlayerActorComponent::endTriggerOverlap(Actor& a, Actor& b) {
+	void HostileActorComponent::endTriggerOverlap(Actor& a, Actor& b) {
 		HFLOGDEBUG("Trigger actor '%d' is not overlapped by actor '%d'", a.getId(), b.getId());
 	}
 }

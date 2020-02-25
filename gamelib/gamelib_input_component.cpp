@@ -40,4 +40,10 @@ namespace GameLib {
 		actor.velocity.x = 0;
 		actor.velocity.y = 0;
 	}
+
+	void HostileInputComponent::update(Actor& actor)
+	{
+		// Guess where this is and shouldn't be...
+		// *coughmaincough*
+	}
 } // namespace GameLib

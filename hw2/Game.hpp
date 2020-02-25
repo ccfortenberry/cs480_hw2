@@ -10,10 +10,13 @@
 
 #include "PlayerActorComponent.hpp"
 #include "DoorActorComponent.hpp"
+#include "HostileActorComponent.hpp"
 
 class Game {
 public: 
 	Game() {}
+
+	int gameState{ 0 };
 
 	void init();
 	void load();

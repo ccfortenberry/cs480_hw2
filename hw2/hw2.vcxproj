@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="DoorActorComponent.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="HostileActorComponent.cpp" />
     <ClCompile Include="hw2.cpp" />
     <ClCompile Include="PlayerActorComponent.cpp" />
   </ItemGroup>
@@ -168,6 +169,7 @@
     <ClInclude Include="Commands.hpp" />
     <ClInclude Include="DoorActorComponent.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="HostileActorComponent.hpp" />
     <ClInclude Include="PlayerActorComponent.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

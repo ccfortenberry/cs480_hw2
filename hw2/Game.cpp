@@ -67,9 +67,9 @@ unsigned int Game::getGameState() {
 
 	graphics.setCenter(graphics.origin());
 
-	unsigned int gameState = 0;
+	gameState = 0;
 
-	while (!context.quitRequested && gameState==0) {
+	while (!context.quitRequested && gameState==0 && world.dynamicActors[0]->active) {
 		updateTiming();
 
 		context.getEvents();
@@ -90,6 +90,22 @@ unsigned int Game::getGameState() {
 
 		context.swapBuffers();
 		frames++;
+
+		if (context.quitRequested) gameState = -1;
+		if (!world.staticActors[8]->active) gameState = 1;
+		if (!world.dynamicActors[0]->active) gameState = 2;
+
+		// Oh hey it's some familiar bad design i'm doing
+		// instead of proper good design
+		// because arbitrary deadlines are arbitrary, and too close...
+		auto direction = glm::normalize(world.dynamicActors[0]->position - world.dynamicActors[1]->position);
+		world.dynamicActors[1]->velocity = direction;
+		direction = glm::normalize(world.dynamicActors[0]->position - world.dynamicActors[2]->position);
+		world.dynamicActors[2]->velocity = direction;
+		direction = glm::normalize(world.dynamicActors[0]->position - world.dynamicActors[3]->position);
+		world.dynamicActors[3]->velocity = direction;
+		//chasePlayer.velocity = direction;
+
 		std::this_thread::yield();
 	}
 
@@ -114,12 +130,14 @@ void Game::initLevel(const int& levelID) {
 	auto NewRandomInput = []() { return std::make_shared<GameLib::RandomInputComponent>(); };
 	auto NewInputForDynamic = []() { return std::make_shared<GameLib::InputComponentForDynamic>(); };
 	auto NewInputForStatic = []() { return std::make_shared<GameLib::InputComponentForStatic>(); };
+	auto NewHostileInput = []() { return std::make_shared<GameLib::HostileInputComponent>(); };
 	// TODO: Add input for AI/Chasing
 
 	// Actor Components
 	auto NewActor = []() { return std::make_shared<GameLib::ActorComponent>(); };
 	auto NewPlayerActor = []() { return std::make_shared<GameLib::PlayerActorComponent>(); };
 	auto NewDoorActor = [](GameLib::ActorPtr& a) { return std::make_shared<GameLib::DoorActorComponent>(a); };
+	auto NewHostileActor = []() { return std::make_shared<GameLib::HostileActorComponent>(); };
 	// Other actor components?
 
 	// Physics Components
@@ -206,6 +224,18 @@ void Game::initLevel(const int& levelID) {
 	/*auto data_vault_trigger = _makeActor(252, 10, 0, 40 * 25 + 37, NewInputForStatic(), NewPlayerActor(), NewPhysics(), NewGraphics());
 	world.addTriggerActor(data_vault_trigger);
 	data_vault_trigger->rename("data_vault_trigger");*/
+
+	auto guard_1 = _makeActor(10, 4, speed, 2, NewHostileInput(), NewHostileActor(), NewPhysics(), NewGraphics());
+	world.addDynamicActor(guard_1);
+	guard_1->rename("Guard_1");
+
+	auto guard_2 = _makeActor(157, 19, speed, 2, NewHostileInput(), NewHostileActor(), NewPhysics(), NewGraphics());
+	world.addDynamicActor(guard_2);
+	guard_2->rename("Guard_2");
+
+	auto guard_3 = _makeActor(181, 15, speed, 2, NewHostileInput(), NewHostileActor(), NewPhysics(), NewGraphics());
+	world.addDynamicActor(guard_3);
+	guard_3->rename("Guard_3");
 }
 
 void Game::showGoodEnd() {
@@ -265,14 +295,18 @@ void Game::main(int argc, char** argv) {
 	load();
 	showIntro();
 	initLevel(1);
-	switch (getGameState())
-	{
-	case 1:
-		showGoodEnd();
-		break;
-	default:
-		showBadEnd();
-		break;
+	while (gameState == 0) {
+		switch (getGameState())
+		{
+		case -1:
+			break;
+		case 1:
+			showGoodEnd();
+			break;
+		default:
+			showBadEnd();
+			break;
+		}
 	}
 	kill();
 }

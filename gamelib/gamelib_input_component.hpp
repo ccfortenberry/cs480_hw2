@@ -38,6 +38,13 @@ namespace GameLib {
 
         void update(Actor& actor) override;
     };
+
+	class HostileInputComponent : public InputComponent {
+	public:
+		virtual ~HostileInputComponent() {}
+
+		void update(Actor& actor) override;
+	};
 }
 
 #endif
